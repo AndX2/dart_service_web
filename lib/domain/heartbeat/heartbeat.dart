@@ -28,3 +28,44 @@ class Heartbeat {
     return Heartbeat(end.difference(start).inDays, days, hours, min, sec);
   }
 }
+
+enum HeartbeatParam {
+  days,
+  hours,
+  minutes,
+  seconds,
+}
+
+extension HeartbeatUiExt on Heartbeat {
+  int full(HeartbeatParam param) {
+    switch (param) {
+      case HeartbeatParam.days:
+        return daysFromStart;
+        break;
+      case HeartbeatParam.hours:
+        return Duration.hoursPerDay;
+        break;
+      case HeartbeatParam.minutes:
+        return Duration.minutesPerHour;
+        break;
+      default:
+        return Duration.secondsPerMinute;
+    }
+  }
+
+  int value(HeartbeatParam param) {
+    switch (param) {
+      case HeartbeatParam.days:
+        return days;
+        break;
+      case HeartbeatParam.hours:
+        return hours;
+        break;
+      case HeartbeatParam.minutes:
+        return minutes;
+        break;
+      default:
+        return seconds;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import 'dart:html' as html;
 
+import 'package:dartservice_web/domain/heartbeat/heartbeat.dart';
 import 'package:dartservice_web/res/colors.dart' as colors;
 import 'package:dartservice_web/res/images.dart';
 import 'package:dartservice_web/ui/widget/estimate_indicator.dart';
@@ -13,7 +14,6 @@ import 'package:google_fonts/google_fonts.dart';
 class StubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     print(
         'port: ${context.isPort}, width: ${ScreenUtil.screenWidth}, height: ${ScreenUtil.screenHeight}');
     print('isSmall: $isSmall, isTablet: $isTablet, isDesktop: $isDesktop');
@@ -36,7 +36,13 @@ class StubScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 100.asp, width: 100.asp),
-                _buildContainer(EstimateIndicator(100.asp, 'sec')),
+                _buildContainer(
+                  EstimateIndicator(
+                    HeartbeatParam.seconds,
+                    100.asp,
+                    'sec',
+                  ),
+                ),
               ],
             ),
           ),
