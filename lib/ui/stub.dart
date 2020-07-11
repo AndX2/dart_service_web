@@ -1,22 +1,19 @@
 import 'dart:html' as html;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:dartservice_web/domain/heartbeat/heartbeat.dart';
 import 'package:dartservice_web/res/colors.dart' as colors;
 import 'package:dartservice_web/res/images.dart';
 import 'package:dartservice_web/ui/widget/estimate_indicator.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dartservice_web/utils/util.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class StubScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(
-        'port: ${context.isPort}, width: ${ScreenUtil.screenWidth}, height: ${ScreenUtil.screenHeight}');
-    print('isSmall: $isSmall, isTablet: $isTablet, isDesktop: $isDesktop');
     return Scaffold(
       body: Stack(
         children: [
@@ -26,24 +23,29 @@ class StubScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Center(
-            child: Wrap(
-              children: [
-                _buildContainer(
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: _buildLabel(),
+          Padding(
+            padding: EdgeInsets.all(96.asp),
+            child: Center(
+              child: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                alignment: WrapAlignment.center,
+                runSpacing: 100.asp,
+                spacing: 100.asp,
+                children: [
+                  _buildContainer(
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _buildLabel(),
+                    ),
                   ),
-                ),
-                SizedBox(height: 100.asp, width: 100.asp),
-                _buildContainer(
-                  EstimateIndicator(
-                    HeartbeatParam.seconds,
-                    100.asp,
-                    'sec',
+                  _buildContainer(
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _buildTimerList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -112,6 +114,39 @@ class StubScreen extends StatelessWidget {
           ],
         ),
       )
+    ];
+  }
+
+  List<Widget> _buildTimerList() {
+    return [
+      EstimateIndicator(
+        HeartbeatParam.days,
+        160.asp,
+        'days',
+      ),
+      SizedBox(height: 16.asp),
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          EstimateIndicator(
+            HeartbeatParam.hours,
+            100.asp,
+            'hours',
+          ),
+          SizedBox(width: 16.asp),
+          EstimateIndicator(
+            HeartbeatParam.minutes,
+            100.asp,
+            'min',
+          ),
+          SizedBox(width: 16.asp),
+          EstimateIndicator(
+            HeartbeatParam.seconds,
+            100.asp,
+            'sec',
+          ),
+        ],
+      ),
     ];
   }
 }

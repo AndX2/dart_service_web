@@ -9,7 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dartservice_web/utils/util.dart';
 
-const _beatDuration = Duration(milliseconds: 300);
+const _beatDuration = Duration(milliseconds: 1000);
+const _valueDuration = Duration(milliseconds: 200);
+const _fontSize = .7;
+const _arcWidth = .05;
+const _labelFontSize = .4;
 
 class EstimateIndicator extends StatefulWidget {
   final HeartbeatParam heartbeatParam;
@@ -45,12 +49,17 @@ class EstimateIndicatorState extends State<EstimateIndicator>
 
     _valueAnimationController = AnimationController(
       vsync: this,
-      duration: _beatDuration,
+      duration: _valueDuration,
     );
+
+    _valueAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(_valueAnimationController);
 
     _ringAnimationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 1000),
+      duration: _beatDuration,
     );
 
     _ringAnimation = TweenSequence(
@@ -73,17 +82,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
     ).animate(_ringAnimationController);
 
     subscription =
-        getIt.get<HeartbeatService>().beatObservable.listen((Heartbeat beat) {
-      _ringValue = beat.value(widget.heartbeatParam).toDouble() /
-          beat.full(widget.heartbeatParam);
-      _ringAnimationController.reset();
-      _ringAnimationController.forward();
-      if (newValue != beat.seconds)
-        setState(() {
-          oldValue = newValue;
-          newValue = beat.seconds;
-        });
-    });
+        getIt.get<HeartbeatService>().beatObservable.listen(_beatEventListen);
   }
 
   @override
@@ -103,36 +102,34 @@ class EstimateIndicatorState extends State<EstimateIndicator>
           child: Stack(
             children: [
               Center(
-                child: AnimatedCrossFade(
-                  firstChild: Text(
-                    oldValue.toString(),
-                    style: GoogleFonts.jura(
-                      fontSize: (widget.width).asp,
-                      color: colors.textColor,
-                    ),
-                  ),
-                  secondChild: Text(
-                    newValue.toString(),
-                    style: GoogleFonts.jura(
-                      fontSize: (widget.width).asp,
-                      color: colors.textColor,
-                    ),
-                  ),
-                  crossFadeState: newValue.isOdd
-                      ? CrossFadeState.showSecond
-                      : CrossFadeState.showFirst,
-                  duration: Duration(milliseconds: 500),
+                child: AnimatedBuilder(
+                  animation: _valueAnimationController,
+                  builder: (_, __) {
+                    return Opacity(
+                      opacity: _valueAnimation.value,
+                      child: Text(
+                        oldValue.toString(),
+                        style: GoogleFonts.jura(
+                          fontSize: (_fontSize * widget.width).asp,
+                          color: colors.textColor,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
               Positioned.fill(
                 child: AnimatedBuilder(
-                    animation: _ringAnimationController,
-                    builder: (_, __) {
-                      return CustomPaint(
-                        painter: ArcPainter(
-                            _ringValue, 5.0.asp * _ringAnimation.value),
-                      );
-                    }),
+                  animation: _ringAnimationController,
+                  builder: (_, __) {
+                    return CustomPaint(
+                      painter: ArcPainter(
+                        _ringValue,
+                        _arcWidth * widget.width.asp * _ringAnimation.value,
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -140,11 +137,33 @@ class EstimateIndicatorState extends State<EstimateIndicator>
         Text(
           widget.text,
           style: GoogleFonts.jura(
-            fontSize: (0.2 * widget.width).asp,
+            fontSize: (_labelFontSize * widget.width).asp,
             color: colors.textColor,
           ),
         ),
       ],
     );
+  }
+
+  void _beatEventListen(Heartbeat beat) {
+    newValue = beat.value(widget.heartbeatParam);
+    _ringValue = beat.value(widget.heartbeatParam).toDouble() /
+        beat.full(widget.heartbeatParam);
+
+    _ringAnimationController.reset();
+    _ringAnimationController.forward();
+
+    if (newValue != oldValue) {
+      _valueAnimationController.reset();
+      _valueAnimationController.addStatusListener(
+        (status) {
+          if (status == AnimationStatus.completed) {
+            oldValue = newValue;
+            _valueAnimationController.reverse();
+          }
+        },
+      );
+      _valueAnimationController.forward();
+    }
   }
 }
