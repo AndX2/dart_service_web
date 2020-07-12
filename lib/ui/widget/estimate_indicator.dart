@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:dartservice_web/di/di_container.dart';
 import 'package:dartservice_web/domain/heartbeat/heartbeat.dart';
-import 'package:dartservice_web/res/colors.dart' as colors;
+import 'package:dartservice_web/res/color/colors.dart' as colors;
 import 'package:dartservice_web/service/heartbeat/heartbeat_service.dart';
 import 'package:dartservice_web/ui/widget/arc_painter.dart';
 import 'package:flutter/material.dart';
@@ -93,52 +93,56 @@ class EstimateIndicatorState extends State<EstimateIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
       children: [
+        SizedBox(
+          height: 1.4 * widget.width,
+          width: widget.width,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              widget.text,
+              style: GoogleFonts.jura(
+                fontSize: _labelFontSize * widget.width,
+                color: colors.textColor,
+              ),
+            ),
+          ),
+        ),
         SizedBox(
           height: widget.width,
           width: widget.width,
-          child: Stack(
-            children: [
-              Center(
-                child: AnimatedBuilder(
-                  animation: _valueAnimationController,
-                  builder: (_, __) {
-                    return Opacity(
-                      opacity: _valueAnimation.value,
-                      child: Text(
-                        oldValue.toString(),
-                        style: GoogleFonts.jura(
-                          fontSize: _fontSize * widget.width,
-                          color: colors.textColor,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Positioned.fill(
-                child: AnimatedBuilder(
-                  animation: _ringAnimationController,
-                  builder: (_, __) {
-                    return CustomPaint(
-                      painter: ArcPainter(
-                        _ringValue,
-                        _arcWidth * widget.width * _ringAnimation.value,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+          child: Center(
+            child: AnimatedBuilder(
+              animation: _valueAnimationController,
+              builder: (_, __) {
+                return Opacity(
+                  opacity: _valueAnimation.value,
+                  child: Text(
+                    oldValue.toString(),
+                    style: GoogleFonts.jura(
+                      fontSize: _fontSize * widget.width,
+                      color: colors.textColor,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ),
-        Text(
-          widget.text,
-          style: GoogleFonts.jura(
-            fontSize: _labelFontSize * widget.width,
-            color: colors.textColor,
+        SizedBox(
+          height: widget.width,
+          width: widget.width,
+          child: AnimatedBuilder(
+            animation: _ringAnimationController,
+            builder: (_, __) {
+              return CustomPaint(
+                painter: ArcPainter(
+                  _ringValue,
+                  _arcWidth * widget.width * _ringAnimation.value,
+                ),
+              );
+            },
           ),
         ),
       ],

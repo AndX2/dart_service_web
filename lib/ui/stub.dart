@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:dartservice_web/domain/heartbeat/heartbeat.dart';
-import 'package:dartservice_web/res/colors.dart' as colors;
+import 'package:dartservice_web/res/color/colors.dart' as colors;
 import 'package:dartservice_web/res/images.dart';
 import 'package:dartservice_web/ui/widget/estimate_indicator.dart';
 import 'package:dartservice_web/utils/util.dart';
@@ -17,7 +17,7 @@ class StubScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          
+
           Positioned.fill(
             child: Image.asset(
               Images.background(portrait: context.isPort).stub,
