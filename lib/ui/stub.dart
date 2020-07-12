@@ -17,6 +17,7 @@ class StubScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
+          
           Positioned.fill(
             child: Image.asset(
               Images.background(portrait: context.isPort).stub,

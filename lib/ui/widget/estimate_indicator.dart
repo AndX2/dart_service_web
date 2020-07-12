@@ -11,9 +11,9 @@ import 'package:dartservice_web/utils/util.dart';
 
 const _beatDuration = Duration(milliseconds: 1000);
 const _valueDuration = Duration(milliseconds: 200);
-const _fontSize = .7;
+const _fontSize = .6;
 const _arcWidth = .05;
-const _labelFontSize = .4;
+const _labelFontSize = .3;
 
 class EstimateIndicator extends StatefulWidget {
   final HeartbeatParam heartbeatParam;
@@ -110,7 +110,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
                       child: Text(
                         oldValue.toString(),
                         style: GoogleFonts.jura(
-                          fontSize: (_fontSize * widget.width).asp,
+                          fontSize: _fontSize * widget.width,
                           color: colors.textColor,
                         ),
                       ),
@@ -125,7 +125,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
                     return CustomPaint(
                       painter: ArcPainter(
                         _ringValue,
-                        _arcWidth * widget.width.asp * _ringAnimation.value,
+                        _arcWidth * widget.width * _ringAnimation.value,
                       ),
                     );
                   },
@@ -137,7 +137,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
         Text(
           widget.text,
           style: GoogleFonts.jura(
-            fontSize: (_labelFontSize * widget.width).asp,
+            fontSize: _labelFontSize * widget.width,
             color: colors.textColor,
           ),
         ),
