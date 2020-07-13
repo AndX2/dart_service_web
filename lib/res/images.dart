@@ -4,10 +4,10 @@ class Images {
 }
 
 class Background extends Images {
-  get stub => 'image/stub_back.webp';
+  get stub => 'image/stub_back.jpg';
 }
 
 class PortraitBackground implements Background {
   @override
-  get stub => 'image/stub_back_port.webp';
+  get stub => 'image/stub_back_port.jpg';
 }
