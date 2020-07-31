@@ -1,13 +1,17 @@
+/// Статические ссылки на ресурсы-картинки
 class Images {
-  static Background background({bool portrait = false}) =>
+  Background background({bool portrait = false}) =>
       portrait ? PortraitBackground() : Background();
 }
 
+/// Картинки ландшафтного режима
 class Background extends Images {
   get stub => 'image/stub_back.jpg';
 }
 
-class PortraitBackground implements Background {
+/// Картинки портретного режима
+class PortraitBackground extends Background {
   @override
   get stub => 'image/stub_back_port.jpg';
 }
+

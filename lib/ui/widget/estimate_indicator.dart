@@ -1,23 +1,27 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:dartservice_web/di/di_container.dart';
 import 'package:dartservice_web/domain/heartbeat/heartbeat.dart';
 import 'package:dartservice_web/res/color/colors.dart' as colors;
 import 'package:dartservice_web/service/heartbeat/heartbeat_service.dart';
 import 'package:dartservice_web/ui/widget/arc_painter.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:dartservice_web/utils/util.dart';
 
+/// Настроечные константы
 const _beatDuration = Duration(milliseconds: 1000);
 const _valueDuration = Duration(milliseconds: 200);
 const _fontSize = .6;
-const _arcWidth = .05;
+const _arcWidth = .07;
 const _labelFontSize = .3;
 
+/// Круговой индикатор обратного отсчета
 class EstimateIndicator extends StatefulWidget {
+  /// Параметр времени, для которого строится индикатор
   final HeartbeatParam heartbeatParam;
+  /// Ширина
   final double width;
+  /// Надпись под индикатором
   final String text;
 
   EstimateIndicator(
@@ -31,13 +35,18 @@ class EstimateIndicator extends StatefulWidget {
   State<StatefulWidget> createState() => EstimateIndicatorState();
 }
 
+/// Состояние виджета индикатора
 class EstimateIndicatorState extends State<EstimateIndicator>
     with TickerProviderStateMixin {
+  /// Текущее значение индикатора
   double _ringValue = 0.0;
+  /// Новое и старое значения числа
   int oldValue = 0;
   int newValue = 0;
+  /// Подписка на стрим с событиями
   StreamSubscription<Heartbeat> subscription;
 
+  /// Анамации и контроллеры анимаций для линии индикатора и числа
   Animation<double> _ringAnimation;
   AnimationController _ringAnimationController;
   Animation<double> _valueAnimation;
@@ -46,9 +55,9 @@ class EstimateIndicatorState extends State<EstimateIndicator>
   @override
   void initState() {
     super.initState();
-
+    /// Инициализация анимаций и контроллеров
     _valueAnimationController = AnimationController(
-      vsync: this,
+      vsync: this, // Это TickerProviderStateMixin
       duration: _valueDuration,
     );
 
@@ -61,7 +70,10 @@ class EstimateIndicatorState extends State<EstimateIndicator>
       vsync: this,
       duration: _beatDuration,
     );
-
+    /// Составная анимация из нескольких периодов 
+    /// 0-10% - значение растет от 0,1 до 1,0;
+    /// 10%-20% не изменяется на уровне 1,0;
+    /// 20%-100% снижается от 1,0 до 0,1
     _ringAnimation = TweenSequence(
       <TweenSequenceItem<double>>[
         TweenSequenceItem<double>(
@@ -80,21 +92,25 @@ class EstimateIndicatorState extends State<EstimateIndicator>
         ),
       ],
     ).animate(_ringAnimationController);
-
+    /// Подписываемся на события потока Heartbeat в сервисе и сохраняем 
+    /// экземпляр подписки
     subscription =
         getIt.get<HeartbeatService>().beatObservable.listen(_beatEventListen);
   }
 
   @override
   void dispose() {
+    /// При уничтожении виджета не забываем отписываться от потока
     subscription.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// В Стек помещаем три виджета надпись, число и шкалу индикатора
     return Stack(
       children: [
+        /// Виджет с размерами, по нижнему краю выравниваем надпись
         SizedBox(
           height: 1.4 * widget.width,
           width: widget.width,
@@ -113,9 +129,14 @@ class EstimateIndicatorState extends State<EstimateIndicator>
           height: widget.width,
           width: widget.width,
           child: Center(
+            /// Виджет для локальной анимации. Он позволяет перестраивать только необходимую
+            /// часть дерева виджетов, избегая вызова метода setState(), приводящего к перестроению
+            /// всего EstimateIndicatorState. Этим достигается повышение производительности.
             child: AnimatedBuilder(
               animation: _valueAnimationController,
               builder: (_, __) {
+                /// Анимация здесь это изменение прозрачности child виджета в соотвествии со значением
+                /// объекта анимации _valueAnimation.value
                 return Opacity(
                   opacity: _valueAnimation.value,
                   child: Text(
@@ -133,9 +154,12 @@ class EstimateIndicatorState extends State<EstimateIndicator>
         SizedBox(
           height: widget.width,
           width: widget.width,
+          /// Виджет анимации шкалы индикатора
           child: AnimatedBuilder(
             animation: _ringAnimationController,
             builder: (_, __) {
+              /// Рисуем кастомный примитив на canvas. Сектор кольца, где градус сектора - 
+              /// текущее значение шкалы, а толщина линии - значение анимации _ringAnimation.value
               return CustomPaint(
                 painter: ArcPainter(
                   _ringValue,
@@ -149,24 +173,31 @@ class EstimateIndicatorState extends State<EstimateIndicator>
     );
   }
 
+  /// Метод, вызываемый при событии Heartbeat
   void _beatEventListen(Heartbeat beat) {
+    /// Получаем новое значение числа для индикатора
     newValue = beat.value(widget.heartbeatParam);
+    /// Считаем, какую часть шкалы индикатора нужно показать
     _ringValue = beat.value(widget.heartbeatParam).toDouble() /
         beat.full(widget.heartbeatParam);
-
+    /// Сбрасываем и запускаем с начала анимацию шкалы индикатора
     _ringAnimationController.reset();
     _ringAnimationController.forward();
-
+    /// Если изменилось значение числа индикатора запускаем анимацию его замены
     if (newValue != oldValue) {
+      /// Сбрасываем контроллер анимации числа
       _valueAnimationController.reset();
+      /// Назначаем метод "прослушивания" состояния анимации числа
       _valueAnimationController.addStatusListener(
         (status) {
+          /// При завершении анимации запускаем ее в обратную сторону, но уже с новым числом
           if (status == AnimationStatus.completed) {
             oldValue = newValue;
             _valueAnimationController.reverse();
           }
         },
       );
+      /// Запускаем анимацию
       _valueAnimationController.forward();
     }
   }

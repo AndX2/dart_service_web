@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+/// Объект, содержащий сведения о времени, оставшемся до релиза
 @immutable
 class Heartbeat {
   final int daysFromStart;
@@ -36,6 +37,8 @@ enum HeartbeatParam {
   seconds,
 }
 
+/// Расширения на [Heartbeat] для получения значений полной шкалы
+/// текущего значения одного из параметров
 extension HeartbeatUiExt on Heartbeat {
   int full(HeartbeatParam param) {
     switch (param) {

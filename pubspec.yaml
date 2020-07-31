@@ -1,8 +1,5 @@
 name: dartservice_web
 description: A new Flutter project.
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
@@ -26,43 +23,30 @@ dependencies:
 
   cupertino_icons: ^0.1.3
 
+  # Утилиты для масштабирования элементов UI
+  # в зависимости от размера экрана
   flutter_screenutil: 2.1.0
 
+  # Шрифты от Google
   google_fonts: 1.1.0
 
+  # Сервис локатор для создания и доступа
+  # к компонентам приложения
   get_it: 4.0.2
 
-  mwwm: 0.1.1
-
-  relation: 0.0.2
-
+  # Реактивная библиотека для передачи событий
+  # и состояний с помощью потоков (Streams)
   rxdart: 0.24.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
-  uses-material-design: true
 
   assets:
     - assets/image/
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
+
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -74,6 +58,3 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

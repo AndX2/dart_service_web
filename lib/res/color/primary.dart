@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Material цвет. В отличие от обычного Color необходимо определить 
+/// словарь оттенков с различной "насыщенностью"
+final mediumSeaGreen = MaterialColor(0xFF43BA56, _colorCodes);
+
 Map<int, Color> _colorCodes = {
   50: Color(0xFF43BA56).withOpacity(.1),
   100: Color(0xFF43BA56).withOpacity(.2),
@@ -13,4 +17,4 @@ Map<int, Color> _colorCodes = {
   900: Color(0xFF43BA56).withOpacity(1.0),
 };
 
-final mediumSeaGreen = MaterialColor(0xFF43BA56, _colorCodes);
+

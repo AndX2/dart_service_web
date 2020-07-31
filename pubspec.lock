@@ -137,13 +137,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
-  mwwm:
-    dependency: "direct main"
-    description:
-      name: mwwm
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   path:
     dependency: transitive
     description:
@@ -207,13 +200,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.13"
-  relation:
-    dependency: "direct main"
-    description:
-      name: relation
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
   rxdart:
     dependency: "direct main"
     description:
@@ -267,7 +253,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.15"
+    version: "0.2.16"
   typed_data:
     dependency: transitive
     description:
