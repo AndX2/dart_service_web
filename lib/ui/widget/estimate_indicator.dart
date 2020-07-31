@@ -46,7 +46,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
   /// Подписка на стрим с событиями
   StreamSubscription<Heartbeat> subscription;
 
-  /// Анамации и контроллеры анимаций для линии индикатора и числа
+  /// Анимации и контроллеры анимаций для линии индикатора и числа
   Animation<double> _ringAnimation;
   AnimationController _ringAnimationController;
   Animation<double> _valueAnimation;
@@ -100,7 +100,7 @@ class EstimateIndicatorState extends State<EstimateIndicator>
 
   @override
   void dispose() {
-    /// При уничтожении виджета не забываем отписываться от потока
+    /// При уничтожении виджета не забываем отписываться от потока событий
     subscription.cancel();
     super.dispose();
   }

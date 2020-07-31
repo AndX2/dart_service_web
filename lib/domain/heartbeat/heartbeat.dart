@@ -38,7 +38,7 @@ enum HeartbeatParam {
 }
 
 /// Расширения на [Heartbeat] для получения значений полной шкалы
-/// текущего значения одного из параметров
+/// и текущего значения одного из параметров
 extension HeartbeatUiExt on Heartbeat {
   int full(HeartbeatParam param) {
     switch (param) {
